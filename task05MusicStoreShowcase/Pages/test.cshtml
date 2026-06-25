@@ -1,0 +1,30 @@
+﻿@page
+@model task05MusicStoreShowcase.Pages.TestModel
+
+<h1>Test Song Generation</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Genre</th>
+            <th>Likes</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var song in Model.Songs)
+        {
+            <tr>
+                <td>@song.Id</td>
+                <td>@song.Title</td>
+                <td>@song.Artist</td>
+                <td>@song.Album</td>
+                <td>@song.Genre</td>
+                <td>@song.Likes</td>
+            </tr>
+        }
+    </tbody>
+</table>

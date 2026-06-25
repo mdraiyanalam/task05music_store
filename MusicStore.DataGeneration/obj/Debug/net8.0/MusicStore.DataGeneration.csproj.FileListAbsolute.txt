@@ -1,0 +1,15 @@
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\bin\Debug\net8.0\Melanchall_DryWetMidi_Native32.dll
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\bin\Debug\net8.0\Melanchall_DryWetMidi_Native64.dll
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\bin\Debug\net8.0\Melanchall_DryWetMidi_Native64.dylib
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\bin\Debug\net8.0\MusicStore.DataGeneration.deps.json
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\bin\Debug\net8.0\MusicStore.DataGeneration.dll
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\bin\Debug\net8.0\MusicStore.DataGeneration.pdb
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.csproj.AssemblyReference.cache
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.AssemblyInfoInputs.cache
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.AssemblyInfo.cs
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.csproj.CoreCompileInputs.cache
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.dll
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\refint\MusicStore.DataGeneration.dll
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.pdb
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\ref\MusicStore.DataGeneration.dll
