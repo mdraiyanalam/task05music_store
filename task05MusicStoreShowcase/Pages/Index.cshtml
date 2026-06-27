@@ -27,12 +27,58 @@
         </div>
         <div class="col-md-3">
             <button onclick="applyFilters()" class="btn btn-primary w-100">Apply Changes</button>
+            <button onclick="randomSeed()" class="btn btn-outline-secondary w-100 mt-2">🎲 Random Seed</button>
         </div>
     </div>
 
-    <!-- Table Container -->
-    <div id="tableContainer">
+    <!-- View Tabs -->
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item">
+            <button class="nav-link active" id="table-tab" onclick="showTable()">Table View</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="gallery-tab" onclick="showGallery()">Gallery View</button>
+        </li>
+    </ul>
+
+    <!-- Table View -->
+    <div id="tableView">
         <partial name="_SongsTable" model="Model" />
+    </div>
+
+    <!-- Gallery View -->
+    <div id="galleryView" style="display:none;">
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4" id="galleryContainer">
+            @foreach (var song in Model.Songs)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <!-- Album Cover with Text -->
+                        <div style="height:180px;background:linear-gradient(135deg,#667eea,#764ba2);position:relative;display:flex;align-items:center;justify-content:center;color:white;overflow:hidden;">
+                            <div style="text-align:center;padding:20px;">
+                                <div style="font-size:60px;margin-bottom:10px;">🎵</div>
+                                <h5 style="margin:0;font-weight:bold;">@song.Title</h5>
+                                <small>@song.Artist</small>
+                            </div>
+                        </div>
+                        <div class="card-body text-center">
+                            <p class="card-text small text-muted">@song.Album • @song.Genre</p>
+                            <span class="badge bg-primary">@song.Likes likes</span>
+                        </div>
+                        <!-- Mini Player -->
+                        <div class="card-footer text-center pt-3">
+                            <audio id="audio-@song.Id" preload="metadata" style="display:none;">
+                                <source src="/Index?handler=Preview&id=@song.Id" type="audio/mpeg">
+                            </audio>
+                            <div class="d-flex align-items-center justify-content-center gap-2">
+                                <button id="playBtn-@song.Id" onclick="togglePlay(@song.Id)" class="btn btn-success btn-sm">▶ Play</button>
+                                <a href="/Index?handler=Preview&id=@song.Id" download class="btn btn-outline-primary btn-sm">⬇</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
 
@@ -56,7 +102,7 @@
                 return response.text();
             })
             .then(html => {
-                document.getElementById('tableContainer').innerHTML = html;
+                document.getElementById('tableView').innerHTML = html;  // Fixed ID
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -64,66 +110,44 @@
             });
         }
 
-        // Advanced Player JavaScript
+        function randomSeed() {
+            const randomSeed = Math.floor(Math.random() * 9000000000000000000) + 1000000000000000000;
+            document.getElementById('seedInput').value = randomSeed;
+            applyFilters();
+        }
+
+        // View Switching
+        function showTable() {
+            document.getElementById('tableView').style.display = 'block';
+            document.getElementById('galleryView').style.display = 'none';
+            document.getElementById('table-tab').classList.add('active');
+            document.getElementById('gallery-tab').classList.remove('active');
+        }
+
+        function showGallery() {
+            document.getElementById('tableView').style.display = 'none';
+            document.getElementById('galleryView').style.display = 'block';
+            document.getElementById('table-tab').classList.remove('active');
+            document.getElementById('gallery-tab').classList.add('active');
+        }
+
+        // Advanced Player
         let currentAudio = null;
 
         function togglePlay(id) {
             const audio = document.getElementById(`audio-${id}`);
             const playBtn = document.getElementById(`playBtn-${id}`);
 
-            if (currentAudio && currentAudio !== audio) {
-                currentAudio.pause();
-            }
+            if (currentAudio && currentAudio !== audio) currentAudio.pause();
 
             if (audio.paused) {
                 audio.play();
-                playBtn.textContent = "⏸ Pause";
+                playBtn.textContent = "⏸";
                 currentAudio = audio;
             } else {
                 audio.pause();
-                playBtn.textContent = "▶ Play";
+                playBtn.textContent = "▶";
             }
         }
-
-        function seekAudio(id) {
-            const audio = document.getElementById(`audio-${id}`);
-            const progress = document.getElementById(`progress-${id}`);
-            if (audio.duration) {
-                audio.currentTime = (progress.value / 100) * audio.duration;
-            }
-        }
-
-        function toggleMute(id) {
-            const audio = document.getElementById(`audio-${id}`);
-            audio.muted = !audio.muted;
-        }
-
-        function changeSpeed(id) {
-            const audio = document.getElementById(`audio-${id}`);
-            const speed = document.getElementById(`speed-${id}`).value;
-            audio.playbackRate = parseFloat(speed);
-        }
-
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return "0:00";
-            const min = Math.floor(seconds / 60);
-            const sec = Math.floor(seconds % 60);
-            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-        }
-
-        function updateProgress() {
-            if (!currentAudio) return;
-            const id = currentAudio.id.replace('audio-', '');
-            const progress = document.getElementById(`progress-${id}`);
-            const timeEl = document.getElementById(`time-${id}`);
-
-            if (progress && timeEl && currentAudio.duration) {
-                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
-                progress.value = percent || 0;
-                timeEl.textContent = `${formatTime(currentAudio.currentTime)} / ${formatTime(currentAudio.duration)}`;
-            }
-        }
-
-        setInterval(updateProgress, 500);
     </script>
 }
