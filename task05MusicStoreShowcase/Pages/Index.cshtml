@@ -49,7 +49,7 @@
     <!-- Gallery View -->
     <div id="galleryView" style="display:none;">
         <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4" id="galleryContainer">
-            @foreach (var song in Model.Songs)
+            @foreach (var song in Model.AllSongsForGallery)
             {
                 <div class="col">
                     <div class="card h-100 shadow-sm">
@@ -96,17 +96,15 @@
                 body: formData
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Server error: ' + response.status);
-                }
+                if (!response.ok) throw new Error('Server error: ' + response.status);
                 return response.text();
             })
             .then(html => {
-                document.getElementById('tableView').innerHTML = html;  // Fixed ID
+                document.getElementById('tableView').innerHTML = html;
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Failed to update table. Check console (F12)');
+                alert('Failed to update table.');
             });
         }
 
@@ -129,6 +127,30 @@
             document.getElementById('galleryView').style.display = 'block';
             document.getElementById('table-tab').classList.remove('active');
             document.getElementById('gallery-tab').classList.add('active');
+        }
+
+        // Pagination
+        function changePage(page) {
+            if (page < 1 || page > @Model.TotalPages) return;
+
+            const formData = new FormData();
+            formData.append("CurrentLanguage", document.getElementById('languageSelect').value);
+            formData.append("CurrentSeed", document.getElementById('seedInput').value);
+            formData.append("AvgLikes", document.getElementById('likesInput').value);
+            formData.append("page", page);
+
+            fetch('/Index?handler=LoadData', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Server error');
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById('tableView').innerHTML = html;
+            })
+            .catch(error => console.error('Error:', error));
         }
 
         // Advanced Player
