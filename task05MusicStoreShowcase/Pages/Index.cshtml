@@ -53,7 +53,6 @@
             {
                 <div class="col">
                     <div class="card h-100 shadow-sm">
-                        <!-- Album Cover with Text -->
                         <div style="height:180px;background:linear-gradient(135deg,#667eea,#764ba2);position:relative;display:flex;align-items:center;justify-content:center;color:white;overflow:hidden;">
                             <div style="text-align:center;padding:20px;">
                                 <div style="font-size:60px;margin-bottom:10px;">🎵</div>
@@ -65,7 +64,6 @@
                             <p class="card-text small text-muted">@song.Album • @song.Genre</p>
                             <span class="badge bg-primary">@song.Likes likes</span>
                         </div>
-                        <!-- Mini Player -->
                         <div class="card-footer text-center pt-3">
                             <audio id="audio-@song.Id" preload="metadata" style="display:none;">
                                 <source src="/Index?handler=Preview&id=@song.Id" type="audio/mpeg">
@@ -84,7 +82,7 @@
 
 @section Scripts {
     <script>
-        // Toolbar AJAX
+        // Toolbar
         function applyFilters() {
             const formData = new FormData();
             formData.append("CurrentLanguage", document.getElementById('languageSelect').value);
@@ -95,17 +93,9 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => {
-                if (!response.ok) throw new Error('Server error: ' + response.status);
-                return response.text();
-            })
-            .then(html => {
-                document.getElementById('tableView').innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to update table.');
-            });
+            .then(response => response.text())
+            .then(html => document.getElementById('tableView').innerHTML = html)
+            .catch(error => console.error('Error:', error));
         }
 
         function randomSeed() {
@@ -143,17 +133,12 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => {
-                if (!response.ok) throw new Error('Server error');
-                return response.text();
-            })
-            .then(html => {
-                document.getElementById('tableView').innerHTML = html;
-            })
+            .then(response => response.text())
+            .then(html => document.getElementById('tableView').innerHTML = html)
             .catch(error => console.error('Error:', error));
         }
 
-        // Advanced Player
+        // Full Player with Progress & Time
         let currentAudio = null;
 
         function togglePlay(id) {
@@ -171,5 +156,35 @@
                 playBtn.textContent = "▶";
             }
         }
+
+        function seekAudio(id) {
+            const audio = document.getElementById(`audio-${id}`);
+            const progress = document.getElementById(`progress-${id}`);
+            if (audio.duration) {
+                audio.currentTime = (progress.value / 100) * audio.duration;
+            }
+        }
+
+        function updateProgress() {
+            if (!currentAudio) return;
+            const id = currentAudio.id.replace('audio-', '');
+            const progress = document.getElementById(`progress-${id}`);
+            const timeEl = document.getElementById(`time-${id}`);
+
+            if (progress && timeEl && currentAudio.duration) {
+                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
+                progress.value = percent || 0;
+                timeEl.textContent = `${formatTime(currentAudio.currentTime)} / ${formatTime(currentAudio.duration)}`;
+            }
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return "0:00";
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        setInterval(updateProgress, 500);
     </script>
 }
