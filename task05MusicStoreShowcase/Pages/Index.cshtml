@@ -53,17 +53,15 @@
             {
                 <div class="col">
                     <div class="card h-100 shadow-sm">
-                        <div style="height:180px;background:linear-gradient(135deg,#667eea,#764ba2);position:relative;display:flex;align-items:center;justify-content:center;color:white;overflow:hidden;">
-                            <div style="text-align:center;padding:20px;">
-                                <div style="font-size:60px;margin-bottom:10px;">🎵</div>
-                                <h5 style="margin:0;font-weight:bold;">@song.Title</h5>
-                                <small>@song.Artist</small>
-                            </div>
+                        <!-- High Resolution Dynamic Canvas Album Cover -->
+                        <div style="height:200px;position:relative;overflow:hidden;border-radius:12px;">
+                            <canvas id="cover-@song.Id" width="400" height="400" style="width:100%;height:100%;image-rendering:crisp-edges;"></canvas>
                         </div>
                         <div class="card-body text-center">
                             <p class="card-text small text-muted">@song.Album • @song.Genre</p>
                             <span class="badge bg-primary">@song.Likes likes</span>
                         </div>
+                        <!-- Mini Player -->
                         <div class="card-footer text-center pt-3">
                             <audio id="audio-@song.Id" preload="metadata" style="display:none;">
                                 <source src="/Index?handler=Preview&id=@song.Id" type="audio/mpeg">
@@ -122,7 +120,6 @@
         // Pagination
         function changePage(page) {
             if (page < 1 || page > @Model.TotalPages) return;
-
             const formData = new FormData();
             formData.append("CurrentLanguage", document.getElementById('languageSelect').value);
             formData.append("CurrentSeed", document.getElementById('seedInput').value);
@@ -138,15 +135,72 @@
             .catch(error => console.error('Error:', error));
         }
 
-        // Full Player with Progress & Time
-        let currentAudio = null;
+        // High-Quality Dynamic Album Cover
+        function drawAlbumCover(songId, title, artist) {
+            const canvas = document.getElementById(`cover-${songId}`);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
 
+            // High resolution background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 400, 400);
+            gradient.addColorStop(0, '#4c6ef5');
+            gradient.addColorStop(1, '#7c3aed');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 400, 400);
+
+            // Large music note
+            ctx.font = '140px Arial';
+            ctx.fillStyle = 'rgba(255,255,255,0.85)';
+            ctx.textAlign = 'center';
+            ctx.fillText('🎵', 200, 190);
+
+            // Song Title - Bold & Large
+            ctx.font = 'bold 42px Arial';
+            ctx.fillStyle = '#ffffff';
+            wrapText(ctx, title, 200, 260, 340, 48);
+
+            // Artist - Smaller
+            ctx.font = '28px Arial';
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.fillText(artist, 200, 320);
+
+            // Subtle border
+            ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+            ctx.lineWidth = 12;
+            ctx.strokeRect(20, 20, 360, 360);
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
+        // Draw all covers after DOM is ready
+        document.addEventListener('DOMContentLoaded', function () {
+            @foreach (var song in Model.AllSongsForGallery)
+            {
+                    @:drawAlbumCover(@song.Id, "@song.Title.Replace("\"", "\\\"")", "@song.Artist.Replace("\"", "\\\"")");
+            }
+        });
+
+        // Player
+        let currentAudio = null;
         function togglePlay(id) {
             const audio = document.getElementById(`audio-${id}`);
             const playBtn = document.getElementById(`playBtn-${id}`);
-
             if (currentAudio && currentAudio !== audio) currentAudio.pause();
-
             if (audio.paused) {
                 audio.play();
                 playBtn.textContent = "⏸";
@@ -156,35 +210,5 @@
                 playBtn.textContent = "▶";
             }
         }
-
-        function seekAudio(id) {
-            const audio = document.getElementById(`audio-${id}`);
-            const progress = document.getElementById(`progress-${id}`);
-            if (audio.duration) {
-                audio.currentTime = (progress.value / 100) * audio.duration;
-            }
-        }
-
-        function updateProgress() {
-            if (!currentAudio) return;
-            const id = currentAudio.id.replace('audio-', '');
-            const progress = document.getElementById(`progress-${id}`);
-            const timeEl = document.getElementById(`time-${id}`);
-
-            if (progress && timeEl && currentAudio.duration) {
-                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
-                progress.value = percent || 0;
-                timeEl.textContent = `${formatTime(currentAudio.currentTime)} / ${formatTime(currentAudio.duration)}`;
-            }
-        }
-
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return "0:00";
-            const min = Math.floor(seconds / 60);
-            const sec = Math.floor(seconds % 60);
-            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-        }
-
-        setInterval(updateProgress, 500);
     </script>
 }
