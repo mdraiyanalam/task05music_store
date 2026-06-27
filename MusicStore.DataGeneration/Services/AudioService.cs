@@ -1,37 +1,47 @@
-using Microsoft.VisualBasic;
-using NAudio.Wave;
 using System.IO;
 
 namespace MusicStore.DataGeneration.Services;
 
 public class AudioService
 {
-    private readonly long _seed;
-
-    public AudioService(long seed)
+    public byte[] GeneratePreviewAudio(int songIndex)
     {
-        _seed = seed;
-    }
+        string audioFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "audio");
 
-    public byte[] GeneratePreviewAudio(int songIndex, int durationSeconds = 10)
-    {
-        var random = new Random((int)(_seed + songIndex));
-        int sampleRate = 44100;
-        int totalSamples = sampleRate * durationSeconds;
+        Console.WriteLine("=== AudioService called for song " + songIndex + " ===");
+        Console.WriteLine("Looking for audio in: " + audioFolder);
 
-        var waveFormat = WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, 1);
-        using var memoryStream = new MemoryStream();
-        using var writer = new WaveFileWriter(memoryStream, waveFormat);
-
-        for (int i = 0; i < totalSamples; i++)
+        if (!Directory.Exists(audioFolder))
         {
-            double t = i / (double)sampleRate;
-            double frequency = 220 + (random.NextDouble() * 440);
-            double amplitude = Math.Sin(2 * Math.PI * frequency * t) * 0.3;
-            writer.WriteSample((float)amplitude);
+            Console.WriteLine("ERROR: Audio folder does not exist!");
+            return new byte[0];
         }
 
-        writer.Flush();
-        return memoryStream.ToArray();
+        var audioFiles = Directory.GetFiles(audioFolder)
+                                  .Where(f => f.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) ||
+                                              f.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                                  .ToArray();
+
+        Console.WriteLine("Found " + audioFiles.Length + " audio files");
+
+        if (audioFiles.Length == 0)
+        {
+            Console.WriteLine("ERROR: No audio files found in folder!");
+            return new byte[0];
+        }
+
+        string selectedFile = audioFiles[songIndex % audioFiles.Length];
+
+        Console.WriteLine("Selected file: " + selectedFile);
+
+        try
+        {
+            return File.ReadAllBytes(selectedFile);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("ERROR reading file: " + ex.Message);
+            return new byte[0];
+        }
     }
 }

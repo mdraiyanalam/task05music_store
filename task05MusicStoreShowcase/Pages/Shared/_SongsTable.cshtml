@@ -1,0 +1,41 @@
+﻿@model task05MusicStoreShowcase.Pages.IndexModel
+
+<table class="table table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Song</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Genre</th>
+            <th>Likes</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var song in Model.Songs)
+        {
+            <tr>
+                <td>@song.Id</td>
+                <td><strong>@song.Title</strong></td>
+                <td>@song.Artist</td>
+                <td>@song.Album</td>
+                <td>@song.Genre</td>
+                <td><span class="badge bg-primary">@song.Likes</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#player-@song.Id">
+                        ▶ Details
+                    </button>
+                </td>
+            </tr>
+
+            <!-- Your expandable player here -->
+            <tr class="collapse" id="player-@song.Id">
+                <td colspan="7" class="p-0 bg-light">
+                    <!-- Paste your full advanced player HTML here -->
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

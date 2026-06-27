@@ -1,5 +1,4 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
+﻿using Microsoft.EntityFrameworkCore;
 using MusicStore.DataGeneration.Generators;
 using MusicStore.DataGeneration.Services;
 using task05MusicStoreShowcase.Data;
@@ -12,22 +11,14 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register services with factory (to provide seed)
+// Register services
 builder.Services.AddScoped<SongGenerator>(sp =>
-    new SongGenerator(1234567890123456789L)); // Default seed
+    new SongGenerator(1234567890123456789L));
 
-builder.Services.AddScoped<AudioService>(sp =>
-    new AudioService(1234567890123456789L)); // Default seed
+builder.Services.AddScoped<AudioService>();
 
-// Add Swagger
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Music Store API",
-        Version = "v1"
-    });
-});
+// Add Swagger (Simple version - no OpenApiInfo)
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

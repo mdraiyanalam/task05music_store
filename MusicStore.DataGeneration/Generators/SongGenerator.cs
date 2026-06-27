@@ -31,6 +31,13 @@ public class SongGenerator
 
     private string GenerateSongTitle(Faker f)
     {
+        if (_locale == "de")
+        {
+            // German style titles
+            return string.Join(" ", f.Lorem.Words(3));
+        }
+
+        // English style titles
         var adjectives = new[] { "Dark", "Electric", "Midnight", "Golden", "Silent", "Broken", "Neon", "Crystal", "Lost", "Eternal" };
         var nouns = new[] { "Heart", "Dream", "Shadow", "Fire", "Rain", "Star", "Night", "Soul", "Echo", "Horizon" };
         return $"{adjectives[f.Random.Int(0, adjectives.Length - 1)]} {nouns[f.Random.Int(0, nouns.Length - 1)]}";

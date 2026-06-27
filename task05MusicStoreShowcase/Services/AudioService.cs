@@ -1,20 +1,37 @@
-﻿using Melanchall.DryWetMidi.Core;
-using System.IO;
+﻿using System.IO;
 
 namespace MusicStore.DataGeneration.Services;
 
 public class AudioService
 {
-    private readonly long _seed;
-
-    public AudioService(long seed)
+    public byte[] GeneratePreviewAudio(int songIndex)
     {
-        _seed = seed;
-    }
+        string audioFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "audio");
 
-    public byte[] GeneratePreviewAudio(int songIndex, int durationSeconds = 15)
-    {
-        // TODO: Implement real MIDI later
-        return new byte[0]; // Placeholder
+        if (!Directory.Exists(audioFolder))
+        {
+            return new byte[0];
+        }
+
+        var audioFiles = Directory.GetFiles(audioFolder)
+                                  .Where(f => f.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) ||
+                                              f.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                                  .ToArray();
+
+        if (audioFiles.Length == 0)
+        {
+            return new byte[0];
+        }
+
+        string selectedFile = audioFiles[songIndex % audioFiles.Length];
+
+        try
+        {
+            return File.ReadAllBytes(selectedFile);
+        }
+        catch
+        {
+            return new byte[0];
+        }
     }
 }

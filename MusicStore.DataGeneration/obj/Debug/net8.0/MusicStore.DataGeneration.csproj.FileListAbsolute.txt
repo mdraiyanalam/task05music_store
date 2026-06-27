@@ -9,6 +9,7 @@ C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.
 C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.AssemblyInfoInputs.cache
 C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.AssemblyInfo.cs
 C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.csproj.CoreCompileInputs.cache
+C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.sourcelink.json
 C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.dll
 C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\refint\MusicStore.DataGeneration.dll
 C:\Users\mdraiyanalam\Desktop\Organize\iTransition\task05music_store\MusicStore.DataGeneration\obj\Debug\net8.0\MusicStore.DataGeneration.pdb

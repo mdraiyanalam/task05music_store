@@ -7,9 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\TestAudio.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bogus" Version="35.6.5" />
     <PackageReference Include="Melanchall.DryWetMidi" Version="8.0.3" />
     <PackageReference Include="MeltySynth" Version="2.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.3.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.28" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,6 +30,10 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\TestAudio.cshtml" />
   </ItemGroup>
 
 </Project>

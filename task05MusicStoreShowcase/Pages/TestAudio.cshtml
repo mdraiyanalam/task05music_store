@@ -1,0 +1,26 @@
+﻿@page
+@model task05MusicStoreShowcase.Pages.TestAudioModel
+
+<h1>🎵 Audio Test for Non-Technical Users</h1>
+
+<p>Click any button to play audio from wwwroot/audio folder</p>
+
+<div class="mt-4">
+    @foreach (var song in Model.Songs)
+    {
+    <div class="mb-3">
+        <button onclick="playAudio(@song.Id)" class="btn btn-success btn-lg">
+            ▶ @song.Title
+        </button>
+    </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+        function playAudio(id) {
+            const audio = new Audio(`/Index?handler=Preview&id=${id}`);
+            audio.play().catch(e => alert("Error playing audio. Check console (F12)"));
+        }
+</script>
+}
