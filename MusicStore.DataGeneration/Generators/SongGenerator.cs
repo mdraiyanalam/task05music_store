@@ -16,6 +16,7 @@ public class SongGenerator
 
     public Song Generate(int index, double avgLikes)
     {
+        // Use seed for reproducibility
         Randomizer.Seed = new Random(_seed + index);
         var faker = new Faker<Song>(_locale);
 
@@ -33,18 +34,22 @@ public class SongGenerator
     {
         if (_locale == "de")
         {
-            // German style titles
-            return string.Join(" ", f.Lorem.Words(3));
+            // Better German-style titles
+            var adjectives = new[] { "Dunkel", "Elektrisch", "Mitternacht", "Golden", "Stille", "Zerbrochen", "Neon", "Kristall", "Verloren", "Ewige" };
+            var nouns = new[] { "Herz", "Traum", "Schatten", "Feuer", "Regen", "Stern", "Nacht", "Seele", "Echo", "Horizont" };
+            return $"{adjectives[f.Random.Int(0, adjectives.Length - 1)]} {nouns[f.Random.Int(0, nouns.Length - 1)]}";
         }
 
-        // English style titles
-        var adjectives = new[] { "Dark", "Electric", "Midnight", "Golden", "Silent", "Broken", "Neon", "Crystal", "Lost", "Eternal" };
-        var nouns = new[] { "Heart", "Dream", "Shadow", "Fire", "Rain", "Star", "Night", "Soul", "Echo", "Horizon" };
-        return $"{adjectives[f.Random.Int(0, adjectives.Length - 1)]} {nouns[f.Random.Int(0, nouns.Length - 1)]}";
+        // English titles
+        var adj = new[] { "Dark", "Electric", "Midnight", "Golden", "Silent", "Broken", "Neon", "Crystal", "Lost", "Eternal" };
+        var noun = new[] { "Heart", "Dream", "Shadow", "Fire", "Rain", "Star", "Night", "Soul", "Echo", "Horizon" };
+        return $"{adj[f.Random.Int(0, adj.Length - 1)]} {noun[f.Random.Int(0, noun.Length - 1)]}";
     }
 
     private int CalculateLikes(double avg)
     {
-        return (int)Math.Floor(avg) + (Random.Shared.NextDouble() < (avg % 1) ? 1 : 0);
+        // Use seeded random for reproducibility (likes depend only on avg + seed)
+        var random = new Random(_seed);
+        return (int)Math.Floor(avg) + (random.NextDouble() < (avg % 1) ? 1 : 0);
     }
 }

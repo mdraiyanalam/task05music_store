@@ -38,25 +38,92 @@
 
 @section Scripts {
     <script>
+        // Toolbar AJAX
         function applyFilters() {
-            const language = document.getElementById('languageSelect').value;
-            const seed = document.getElementById('seedInput').value;
-            const likes = document.getElementById('likesInput').value;
+            const formData = new FormData();
+            formData.append("CurrentLanguage", document.getElementById('languageSelect').value);
+            formData.append("CurrentSeed", document.getElementById('seedInput').value);
+            formData.append("AvgLikes", document.getElementById('likesInput').value);
 
             fetch('/Index?handler=LoadData', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    CurrentLanguage: language,
-                    CurrentSeed: parseInt(seed) || 1234567890123456789,
-                    AvgLikes: parseFloat(likes) || 3.5
-                })
+                body: formData
             })
-            .then(response => response.text())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server error: ' + response.status);
+                }
+                return response.text();
+            })
             .then(html => {
                 document.getElementById('tableContainer').innerHTML = html;
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to update table. Check console (F12)');
+            });
         }
+
+        // Advanced Player JavaScript
+        let currentAudio = null;
+
+        function togglePlay(id) {
+            const audio = document.getElementById(`audio-${id}`);
+            const playBtn = document.getElementById(`playBtn-${id}`);
+
+            if (currentAudio && currentAudio !== audio) {
+                currentAudio.pause();
+            }
+
+            if (audio.paused) {
+                audio.play();
+                playBtn.textContent = "⏸ Pause";
+                currentAudio = audio;
+            } else {
+                audio.pause();
+                playBtn.textContent = "▶ Play";
+            }
+        }
+
+        function seekAudio(id) {
+            const audio = document.getElementById(`audio-${id}`);
+            const progress = document.getElementById(`progress-${id}`);
+            if (audio.duration) {
+                audio.currentTime = (progress.value / 100) * audio.duration;
+            }
+        }
+
+        function toggleMute(id) {
+            const audio = document.getElementById(`audio-${id}`);
+            audio.muted = !audio.muted;
+        }
+
+        function changeSpeed(id) {
+            const audio = document.getElementById(`audio-${id}`);
+            const speed = document.getElementById(`speed-${id}`).value;
+            audio.playbackRate = parseFloat(speed);
+        }
+
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return "0:00";
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+        }
+
+        function updateProgress() {
+            if (!currentAudio) return;
+            const id = currentAudio.id.replace('audio-', '');
+            const progress = document.getElementById(`progress-${id}`);
+            const timeEl = document.getElementById(`time-${id}`);
+
+            if (progress && timeEl && currentAudio.duration) {
+                const percent = (currentAudio.currentTime / currentAudio.duration) * 100;
+                progress.value = percent || 0;
+                timeEl.textContent = `${formatTime(currentAudio.currentTime)} / ${formatTime(currentAudio.duration)}`;
+            }
+        }
+
+        setInterval(updateProgress, 500);
     </script>
 }

@@ -30,10 +30,52 @@
                 </td>
             </tr>
 
-            <!-- Your expandable player here -->
+            <!-- Advanced Expandable Player -->
             <tr class="collapse" id="player-@song.Id">
                 <td colspan="7" class="p-0 bg-light">
-                    <!-- Paste your full advanced player HTML here -->
+                    <div class="p-4">
+                        <div class="d-flex align-items-center">
+                            <!-- Album Art -->
+                            <div class="me-4">
+                                <div style="width:120px;height:120px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:50px;box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+                                    🎵
+                                </div>
+                            </div>
+
+                            <!-- Song Info + Player -->
+                            <div class="flex-grow-1">
+                                <h4>@song.Title</h4>
+                                <h5 class="text-muted">@song.Artist</h5>
+                                <p class="text-muted">@song.Album • @song.Genre</p>
+
+                                <!-- Full Player -->
+                                <div class="mt-3">
+                                    <audio id="audio-@song.Id" preload="metadata">
+                                        <source src="/Index?handler=Preview&id=@song.Id" type="audio/mpeg">
+                                    </audio>
+
+                                    <div class="d-flex align-items-center gap-3">
+                                        <button id="playBtn-@song.Id" onclick="togglePlay(@song.Id)" class="btn btn-success btn-lg">▶ Play</button>
+
+                                        <input type="range" id="progress-@song.Id" class="form-range flex-grow-1" value="0" min="0" max="100" oninput="seekAudio(@song.Id)">
+
+                                        <span id="time-@song.Id" class="small text-muted">0:00 / 0:00</span>
+
+                                        <button onclick="toggleMute(@song.Id)" class="btn btn-outline-secondary">🔊</button>
+
+                                        <select id="speed-@song.Id" onchange="changeSpeed(@song.Id)" class="form-select w-auto">
+                                            <option value="0.5">0.5x</option>
+                                            <option value="1" selected>1x</option>
+                                            <option value="1.5">1.5x</option>
+                                            <option value="2">2x</option>
+                                        </select>
+
+                                        <a href="/Index?handler=Preview&id=@song.Id" download class="btn btn-outline-primary">⬇ Download</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         }
